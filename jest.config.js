@@ -15,7 +15,7 @@ module.exports = {
     'src/*.{js,ts}'
   ],
   coveragePathIgnorePatterns: [
-     "server\.ts"
+    "server.ts"
   ],
   coverageThreshold: {
     global: {

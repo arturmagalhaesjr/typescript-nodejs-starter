@@ -38,7 +38,7 @@ const apiSuffix = '/api/v0'
 const jwtHandler = new JWTHandler();
 
 jwtHandler.handleCheckToken = (token: string) => {
-    return new Promise((resolve: Function, reject: Function) => {
+    return new Promise((resolve: any, reject: any) => {
         if (token === process.env.TOKEN_AUTHENTICATION) {
             resolve();
         } else {

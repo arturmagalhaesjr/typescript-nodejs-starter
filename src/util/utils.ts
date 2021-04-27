@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 
-export const getApiLinks = (req: Request) => {
+export const getApiLinks = (req: Request): Array<any> => {
     return [
         {
             "rel": "self",
@@ -9,7 +9,7 @@ export const getApiLinks = (req: Request) => {
     ]
 }
 
-export const errorHandler = (res: Response, message: string, status = 500) => {
+export const errorHandler = (res: Response, message: string, status = 500): void => {
     res.status(500).send({
         status: status,
         error: message

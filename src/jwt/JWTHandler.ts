@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { getApiLinks } from "../util/utils";
 export default class JWTHandler {
 
-    public handleCheckToken:Function;
+    public handleCheckToken: (token: string) => Promise<any>;
 
     public unauthorizedError (res: Response): void {
         res.status(401).send({
