@@ -13,15 +13,18 @@ COPY ./jest.setup-file.ts .
 COPY ./junit-TEST.xml .
 COPY ./tsconfig.json .
 COPY ./health-check.js .
+COPY ./tests ./tests
 RUN apk add --update \
     curl \
     && rm -rf /var/cache/apk/*
-ARG token_auth
-ENV NODE_ENV=production
-ENV NODE_PORT=5002
-ENV TOKEN_AUTHENTICATION=token_auth
-RUN npm test
 RUN npm install
+RUN npm run test
+ARG token_auth
+ARG session_secret
+ENV NODE_PORT=5002
+ENV NODE_ENV=production
+ENV TOKEN_AUTHENTICATION=$token_auth
+ENV SESSION_SECRET=$session_secret
 RUN npm run build
 EXPOSE 5002
 CMD [ "npm", "start" ]

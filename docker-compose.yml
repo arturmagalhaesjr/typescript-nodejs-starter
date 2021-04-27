@@ -1,7 +1,11 @@
 version: '3.4'
 services:
   backend:
-    build: .
+    build:
+      context: .
+      args:
+        - token_auth=${API_TOKEN}
+        - session_secret=${API_SESSION_SECRET}
     # image: <image>
     restart: always
     ports:
