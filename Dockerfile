@@ -18,6 +18,7 @@ RUN apk add --update \
     && rm -rf /var/cache/apk/*
 ENV NODE_ENV=production
 ENV NODE_PORT=5002
+RUN npm test
 RUN npm install
 RUN npm run build
 EXPOSE 5002
