@@ -1,0 +1,26 @@
+version: '3.4'
+services:
+  backend:
+    build: .
+    # image: <image>
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - 5002:5002
+    healthcheck:
+      test: node /usr/src/app/health-check.js
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    deploy:
+      mode: replicated
+      replicas: 5
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 10s
