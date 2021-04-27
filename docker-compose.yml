@@ -4,8 +4,6 @@ services:
     build: .
     # image: <image>
     restart: always
-    depends_on:
-      - mongo
     ports:
       - 5002:5002
     healthcheck:

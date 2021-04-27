@@ -16,8 +16,10 @@ COPY ./health-check.js .
 RUN apk add --update \
     curl \
     && rm -rf /var/cache/apk/*
+ARG token_auth
 ENV NODE_ENV=production
 ENV NODE_PORT=5002
+ENV TOKEN_AUTHENTICATION=token_auth
 RUN npm test
 RUN npm install
 RUN npm run build
