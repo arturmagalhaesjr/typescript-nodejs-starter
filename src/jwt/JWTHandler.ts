@@ -8,7 +8,7 @@ export default class JWTHandler {
     public unauthorizedError (res: Response): void {
         res.status(401).send({
             status: 401,
-            error: 'Unauthorized for this request, please check the token is valid'
+            error: 'Unauthorized for this request, please check if the token is valid'
         })
     }
 
@@ -51,7 +51,7 @@ export default class JWTHandler {
             this.unauthorizedError(res)
         } else {
             const secret = process.env.SESSION_SECRET
-            jwt.verify(token, secret as string, (err: any, decoded: any) => {
+            jwt.verify(token, secret as string, (err: any) => {
                 if (err) {
                     this.unauthorizedError(res)
                 } else {
