@@ -1,63 +1,68 @@
-import jwt = require('jsonwebtoken')
-import { NextFunction, Request, Response } from "express";
-import { getApiLinks } from "../util/utils";
+import jwt = require('jsonwebtoken');
+import { Request, Response } from 'express';
+import { getApiLinks } from '../util/utils';
+import { Action } from 'routing-controllers';
+
 export default class JWTHandler {
+    private handleCheckToken: (token: string) => Promise<any>;
 
-    public handleCheckToken: (token: string) => Promise<any>;
+    constructor(handleCheckToken: (token: string) => Promise<any>) {
+        this.handleCheckToken = handleCheckToken;
+    }
 
-    public unauthorizedError (res: Response): void {
+    public unauthorizedError(res: Response): void {
         res.status(401).send({
             status: 401,
-            error: 'Unauthorized for this request, please check if the token is valid'
-        })
+            error: 'Unauthorized for this request, please check if the token is valid',
+        });
     }
 
-    public getToken (req: Request): string {
-        let token = req.headers.authorization
+    public getToken(req: Request): string {
+        let token = req.headers.authorization;
         if (!token || token.length === 0) {
-            token = ""
+            token = '';
         } else {
-            token = token.replace("Bearer ", "")
+            token = token.replace('Bearer ', '');
         }
-        return token
+        return token;
     }
 
-    public registry (req: Request, res: Response) :void {
-        if (this.handleCheckToken) {
-            this.handleCheckToken(this.getToken(req)).then(() => {
-                const id = new Date().getUTCMilliseconds()
-                const secret = process.env.SESSION_SECRET
-                const expires = 300
+    public registry(req: Request, res: Response): void {
+        this.handleCheckToken(this.getToken(req))
+            .then(() => {
+                const id = new Date().getUTCMilliseconds();
+                const secret = process.env.SESSION_SECRET;
+                const expires = 300;
                 const jwtToken = jwt.sign({ id }, secret as string, {
-                    expiresIn: expires // expires in 5min
+                    expiresIn: expires, // expires in 5min
                 });
                 res.status(200).send({
                     access_token: jwtToken,
-                    token_type: "bearer",
+                    token_type: 'bearer',
                     expires_in: expires,
                     time: new Date(),
-                    links: getApiLinks(req)
-                })
-            }).catch(() => {
+                    links: getApiLinks(req),
+                });
+            })
+            .catch(() => {
                 this.unauthorizedError(res);
-            })
-        } else {
-            this.unauthorizedError(res);
-        }
+            });
     }
-    public verify (req: Request, res: Response, next: NextFunction): void {
-        const token = this.getToken(req)
+
+    public async verify(action: Action, roles: string[]): Promise<boolean> {
+        const req = action.request;
+        const token = this.getToken(req);
         if (!token || token.length === 0) {
-            this.unauthorizedError(res)
+            return false;
         } else {
-            const secret = process.env.SESSION_SECRET
-            jwt.verify(token, secret as string, (err: any) => {
-                if (err) {
-                    this.unauthorizedError(res)
-                } else {
-                    next()
-                }
-            })
+            const secret = process.env.SESSION_SECRET;
+            try {
+                jwt.verify(token, secret as string);
+                return true;
+            } catch (err) {
+                console.error(err);
+                return false;
+            }
         }
     }
 }
