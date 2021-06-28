@@ -19,7 +19,6 @@ export class HelloWorldController {
     @Header('Cache-control', 'max-age=18000')
     @Get('/')
     async getAll(@Req() request: Request): Promise<any> {
-        console.log('request');
         return {
             data: 'Hello World',
         };

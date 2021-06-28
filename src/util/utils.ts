@@ -4,7 +4,7 @@ export const getApiLinks = (req: Request): Array<any> => {
     return [
         {
             rel: 'self',
-            href: req.protocol + '://' + req.host + req.path,
+            href: req.protocol + '://' + req.hostname + req.path,
         },
     ];
 };
