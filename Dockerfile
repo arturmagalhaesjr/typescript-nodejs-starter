@@ -21,10 +21,11 @@ RUN npm install
 RUN npm run test
 ARG token_auth
 ARG session_secret
-ENV NODE_PORT=5002
+ARG node_port
+ENV NODE_PORT=$node_port
 ENV NODE_ENV=production
 ENV TOKEN_AUTHENTICATION=$token_auth
 ENV SESSION_SECRET=$session_secret
 RUN npm run build
-EXPOSE 5002
+EXPOSE $node_port
 CMD [ "npm", "start" ]

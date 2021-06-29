@@ -4,12 +4,13 @@ services:
     build:
       context: .
       args:
-        - token_auth=${API_TOKEN}
-        - session_secret=${API_SESSION_SECRET}
+        - token_auth=${TOKEN_AUTHENTICATION}
+        - session_secret=${SESSION_SECRET}
+        - node_port=${NODE_PORT}
     # image: <image>
     restart: always
     ports:
-      - 5002:5002
+      - 5002:${NODE_PORT}
     healthcheck:
       test: node /usr/src/app/health-check.js
       interval: 10s
